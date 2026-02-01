@@ -10,6 +10,7 @@ class DeviceManager{
     ~DeviceManager();
     void pressKey(int key);
     void moveMouse(int dx, int dy);
+    void mouseClick(int button);
 
     private:
     void emit(int fd, int type, int code, int val);

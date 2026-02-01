@@ -31,6 +31,8 @@ void DeviceManager::setupMouse(){
     
     ioctl(fdMouse, UI_SET_EVBIT, EV_KEY);
     ioctl(fdMouse, UI_SET_KEYBIT, BTN_LEFT);
+    ioctl(fdMouse, UI_SET_KEYBIT, BTN_MIDDLE);
+    ioctl(fdMouse, UI_SET_KEYBIT, BTN_RIGHT);
 
     ioctl(fdMouse, UI_SET_EVBIT, EV_REL);
     ioctl(fdMouse, UI_SET_RELBIT, REL_X);
@@ -71,6 +73,12 @@ void DeviceManager::pressKey(int key){
     emit(fdKeyboard, EV_KEY, key, 0);
     emit(fdKeyboard, EV_SYN, SYN_REPORT, 0);
 }
+void DeviceManager::mouseClick(int button){
+    emit(fdMouse, EV_KEY, button, 1);
+    emit(fdMouse, EV_SYN, SYN_REPORT, 0);
+    emit(fdMouse, EV_KEY, button, 0);
+    emit(fdMouse, EV_SYN, SYN_REPORT, 0);
+}
 void DeviceManager::moveMouse(int dx, int dy){
     emit(fdMouse, EV_REL, REL_X, dx);
     emit(fdMouse, EV_REL, REL_Y, dy);
@@ -86,6 +94,8 @@ DeviceManager::~DeviceManager(){
     cleanKeyboard();
     cleanMouse();
 }
+
+// #include <iostream>
 
 // int main()
 // {
@@ -103,4 +113,29 @@ DeviceManager::~DeviceManager(){
 //     manager.pressKey(KEY_A);
 //     manager.pressKey(KEY_B);
 //     manager.pressKey(KEY_C);
+
+//     int interval;
+//     int duration;
+//     {
+//         std::string input;
+//         std::cout << "Times per second?\n";
+//         std::cin >> input;
+
+//         int parsed = std::stoi(input);
+//         interval = 1000000 / parsed;
+//     }
+//     {
+//         std::string input;
+//         std::cout << "How many seconds?\n";
+//         std::cin >> input;
+
+//         int parsed = std::stoi(input);
+//         duration = 1000000 * parsed;
+//     }
+
+//     for(int i = 0; i < duration / interval; ++i)
+//     {
+//         manager.mouseClick(BTN_LEFT);
+//         usleep(interval);
+//     }
 // }
